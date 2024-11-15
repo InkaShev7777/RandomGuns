@@ -20,7 +20,9 @@ struct EmptyGameView: View {
                     .frame(width: 100, height: 100)
                 
                 Text("To start the game, add players.")
-                    .font(.title2)
+                    .font(.title)
+                    .fontWeight(.semibold)
+                    .multilineTextAlignment(.center)
                 
                 Button {
                     isShowSheet = true
@@ -40,5 +42,5 @@ struct EmptyGameView: View {
 }
 
 //#Preview {
-//    EmptyGameView(isEmpty: true)
+//    EmptyGameView(isShowSheet: true)
 //}

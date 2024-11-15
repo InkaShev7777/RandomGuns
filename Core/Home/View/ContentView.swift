@@ -46,7 +46,7 @@ struct ContentView: View {
                     
                     Spacer()
                     
-                    //owner
+                    //creater
                     Text("Created By: InkaShev777")
                         .font(.footnote)
                 }

@@ -69,9 +69,9 @@ struct UserCellView: View {
                                 isLive = viewModel.isLive()
                                 isDie = !isLive
                                 if isDie {
-                                    HupticManager.shared.vibrate(for: .error)
+                                    HapticManager.shared.vibrate(for: .error)
                                 } else {
-                                    HupticManager.shared.vibrate(for: .success)
+                                    HapticManager.shared.vibrate(for: .success)
                                 }
                             }
                         } label: {

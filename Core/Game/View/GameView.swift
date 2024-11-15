@@ -46,43 +46,55 @@ struct GameView: View {
             }
         }
         .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Image(systemName: "arrow.clockwise")
-                    .foregroundStyle(Color.white)
-                    .font(.system(size: 20))
-                    .onTapGesture {
-                        withAnimation {
-                            viewModel.resetGame()
+            if !isEmpty {
+                ToolbarItem(placement: .topBarLeading) {
+                    Image(systemName: "xmark")
+                        .foregroundStyle(Color.white)
+                        .font(.system(size: 20))
+                        .onTapGesture {
+                            viewModel.newGame()
                             isEmpty = true
-                            HupticManager.shared.vibrate(for: .success)
+                            HapticManager.shared.vibrate(for: .error)
                         }
-                    }
-            }
-            
-            ToolbarItem(placement: .topBarTrailing) {
-                Image(systemName: "suit.spade")
-                    .foregroundStyle(Color.white)
-                    .font(.system(size: 20))
-                    .onTapGesture {
-                        isShowCrad = true
-                        SoundManager.shared.soundOfCard()
-                        RandomPlayingCardManager.shared.randomCard()
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                            withAnimation {
-                                SoundManager.shared.soundOfCard()
-                                isShowCrad = false
+                }
+
+                ToolbarItem(placement: .topBarTrailing) {
+                    Image(systemName: "suit.spade")
+                        .foregroundStyle(Color.white)
+                        .font(.system(size: 20))
+                        .onTapGesture {
+                            isShowCrad = true
+                            SoundManager.shared.soundOfCard()
+                            RandomPlayingCardManager.shared.randomCard()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                                withAnimation {
+                                    SoundManager.shared.soundOfCard()
+                                    isShowCrad = false
+                                }
                             }
                         }
-                    }
-            }
-            
-            ToolbarItem(placement: .topBarTrailing) {
-                Image(systemName: "plus")
-                    .foregroundStyle(Color.white)
-                    .font(.system(size: 20))
-                    .onTapGesture {
-                        isShowSheet = true
-                    }
+                }
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    Image(systemName: "arrow.clockwise")
+                        .foregroundStyle(Color.white)
+                        .font(.system(size: 20))
+                        .onTapGesture {
+                            withAnimation {
+                                viewModel.resetGame()
+                                HapticManager.shared.vibrate(for: .success)
+                            }
+                        }
+                }
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    Image(systemName: "plus")
+                        .foregroundStyle(Color.white)
+                        .font(.system(size: 20))
+                        .onTapGesture {
+                            isShowSheet = true
+                        }
+                }
             }
         }
         .navigationBarBackButtonHidden()
@@ -111,7 +123,7 @@ struct GameView: View {
                 Text("OK")
             }
         } message: {
-            Text("Username required to play")
+            Text("Username required to play.")
         }
     }
 }

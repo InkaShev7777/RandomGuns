@@ -6,9 +6,11 @@
 //
 
 import Foundation
+import SwiftUI
 
 class GameViewViewModel: ObservableObject {
-    @Published var usersList =  [User]()
+    @Published var usersList = [User]()
+    @Published var isRefresh: Bool = false
     var selectedUser: User?
     static let shared = GameViewViewModel()
     
@@ -59,6 +61,11 @@ class GameViewViewModel: ObservableObject {
     }
     
     public func resetGame() {
+        selectedUser = nil
+        self.usersList = usersList.map { User(name: $0.name) }
+    }
+    
+    public func newGame() {
         usersList = [User]()
         selectedUser = nil
     }

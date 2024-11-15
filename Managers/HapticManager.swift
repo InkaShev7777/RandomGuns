@@ -8,8 +8,8 @@
 import Foundation
 import UIKit
 
-final class HupticManager {
-    static let shared = HupticManager()
+final class HapticManager {
+    static let shared = HapticManager()
     
     public func vibrate(for type: UINotificationFeedbackGenerator.FeedbackType) {
         DispatchQueue.main.async {
