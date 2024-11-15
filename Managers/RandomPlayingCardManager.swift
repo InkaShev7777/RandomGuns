@@ -7,7 +7,7 @@
 
 import Foundation
 
-class RandomPlayingCardManager {
+final class RandomPlayingCardManager {
     @Published var cardTable: String = ""
     @Published var card = ""
     static let shared = RandomPlayingCardManager()

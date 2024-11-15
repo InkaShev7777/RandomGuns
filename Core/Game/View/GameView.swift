@@ -51,8 +51,11 @@ struct GameView: View {
                     .foregroundStyle(Color.white)
                     .font(.system(size: 20))
                     .onTapGesture {
-                        viewModel.resetGame()
-                        isEmpty = true
+                        withAnimation {
+                            viewModel.resetGame()
+                            isEmpty = true
+                            HupticManager.shared.vibrate(for: .success)
+                        }
                     }
             }
             

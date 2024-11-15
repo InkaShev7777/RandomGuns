@@ -68,6 +68,11 @@ struct UserCellView: View {
                                 countOfShoot = viewModel.getCountOfShoot()
                                 isLive = viewModel.isLive()
                                 isDie = !isLive
+                                if isDie {
+                                    HupticManager.shared.vibrate(for: .error)
+                                } else {
+                                    HupticManager.shared.vibrate(for: .success)
+                                }
                             }
                         } label: {
                             Text("Shoot")
