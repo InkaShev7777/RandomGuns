@@ -8,12 +8,16 @@
 import SwiftUI
 
 struct GameView: View {
-    @State var isEmpty = true
     @State var isShowCrad = false
     @State var newUserName: String = ""
     @StateObject var viewModel = GameViewViewModel.shared
+    @State var isEmpty: Bool
     @State var isShowSheet = false
     @State var isDie = false
+    
+    init() {
+        isEmpty = GameViewViewModel.shared.isEmpty()
+    }
     
     var body: some View {
         NavigationView {
@@ -32,7 +36,7 @@ struct GameView: View {
                                 CardView(cardName: RandomPlayingCardManager.shared.cardTable)
                             }
                         } else {
-                            if isEmpty {
+                            if viewModel.isEmpty() {
                                 EmptyGameView(isShowSheet: $isShowSheet)
                                     .padding(.top, 250)
                             } else {

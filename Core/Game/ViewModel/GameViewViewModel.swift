@@ -48,6 +48,10 @@ class GameViewViewModel: ObservableObject {
         }
     }
     
+    public func isEmpty() -> Bool {
+        return usersList.isEmpty
+    }
+    
     public func getCountOfShoot() -> Int {
         guard let user = selectedUser else { return -1}
         
@@ -68,6 +72,12 @@ class GameViewViewModel: ObservableObject {
     public func newGame() {
         usersList = [User]()
         selectedUser = nil
+    }
+    
+    public func deleteUser(user: User) {
+        if let index = usersList.firstIndex(where: { $0.id == user.id }) {
+            usersList.remove(at: index)
+        }
     }
     
 }

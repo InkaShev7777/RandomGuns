@@ -9,10 +9,11 @@ import SwiftUI
 
 struct UserCellView: View {
     @State var countOfShoot: Int
-    @State var isLive = true
+    @State var isLive: Bool = true
     @StateObject var viewModel = GameViewViewModel.shared
     @StateObject var user: User
     @Binding var isDie: Bool
+    @State var isShowLongPressAlert: Bool = false
     
     var body: some View {
         ZStack {
@@ -91,6 +92,31 @@ struct UserCellView: View {
             .frame(width: 250, height: 250)
             .background(Color.gray.opacity( isLive ? 0.5 : 0 ))
             .cornerRadius(10.0)
+            .onLongPressGesture {
+                withAnimation {
+                    isShowLongPressAlert = true
+                }
+            }
+            .alert("Delete Gamer \(user.name)", isPresented: $isShowLongPressAlert) {
+                
+                Button("Cancel", role: .cancel) {
+                    withAnimation {
+                        isShowLongPressAlert = false
+                    }
+                }
+                
+                Button("DELETE", role: .destructive) {
+                    withAnimation {
+                        viewModel.deleteUser(user: user)
+                        isShowLongPressAlert = false
+                    }
+                }
+            } message: {
+                Text("Are you sure you want to delete the gamer \(user.name)?")
+            }
+            .onAppear {
+                isLive = user.isLive
+            }
         }
     }
 }
