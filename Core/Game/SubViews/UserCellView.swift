@@ -14,8 +14,9 @@ struct UserCellView: View {
     @StateObject var user: User
     @Binding var isDie: Bool
     @State var isShowLongPressAlert: Bool = false
-    
+    @Binding var letShowNewCardTable: Bool
     @State private var isDragging: Bool = false
+    @Binding var letShooting: Bool
     
     var body: some View {
         ZStack {
@@ -66,6 +67,7 @@ struct UserCellView: View {
                     if isLive {
                         Button {
                             withAnimation {
+                                letShowNewCardTable = true
                                 viewModel.selectUser(user: user)
                                 viewModel.shoot()
                                 countOfShoot = viewModel.getCountOfShoot()
@@ -76,6 +78,7 @@ struct UserCellView: View {
                                 } else {
                                     HapticManager.shared.vibrate(for: .success)
                                 }
+                                letShooting = false
                             }
                         } label: {
                             Text("Shoot")
@@ -86,6 +89,8 @@ struct UserCellView: View {
                                 .background(Color.black)
                                 .cornerRadius(5.0)
                         }
+                        .disabled(!letShooting)
+                        .opacity(letShooting ? 1.0 : 0.5)
                     }
                 }
                 

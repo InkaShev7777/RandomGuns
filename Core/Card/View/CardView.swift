@@ -23,7 +23,7 @@ struct CardView: View {
                 .animation(.easeInOut(duration: 1.0).repeatForever(autoreverses: true), value: scale)
                 .onAppear {
                     scale = 1.2
-                    
+
                     if cardName == "king" {
                         tableName = "KING`S TABLE"
                         SoundManager.shared.kingTableCard()
@@ -34,6 +34,8 @@ struct CardView: View {
                         tableName = "QUEEN`S TABLE"
                         SoundManager.shared.queenTableCard()
                     }
+                    
+                    CardViewViewModel.shared.titleCradDisplay = tableName
                 }
             
             Text(tableName)

@@ -14,13 +14,15 @@ struct GameView: View {
     @State var isEmpty: Bool
     @State var isShowSheet = false
     @State var isDie = false
+    @State var letShowNewCardTable = true
+    @State var letShooting = false
     
     init() {
         isEmpty = GameViewViewModel.shared.isEmpty()
     }
     
     var body: some View {
-        NavigationView {
+        GeometryReader { geometry in
             ZStack {
                 LinearGradient(
                     gradient: Gradient(colors: [.black, .red]),
@@ -29,25 +31,43 @@ struct GameView: View {
                 )
                 .ignoresSafeArea()
                 
-                ScrollView {
-                    VStack {
-                        if isShowCrad {
-                            withAnimation {
-                                CardView(cardName: RandomPlayingCardManager.shared.cardTable)
-                            }
-                        } else {
-                            if viewModel.isEmpty() {
-                                EmptyGameView(isShowSheet: $isShowSheet)
-                                    .padding(.top, 250)
+                VStack {
+                    if CardViewViewModel.shared.titleCradDisplay != "" {
+                        Text(CardViewViewModel.shared.titleCradDisplay)
+                            .font(.title)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(Color.white)
+                            .padding(.top, 20)
+                    }
+                    
+                    ScrollView {
+                        VStack {
+                            if isShowCrad {
+                                withAnimation {
+                                    CardView(cardName: RandomPlayingCardManager.shared.cardTable)
+                                }
                             } else {
-                                ListUsersView(listUsers: viewModel.usersList, isDie: $isDie)
-                                    .frame(maxWidth: .infinity)
+                                if viewModel.isEmpty() {
+                                    EmptyGameView(isShowSheet: $isShowSheet)
+                                        .padding(.top, 250)
+                                } else {
+                                    ListUsersView(listUsers: viewModel.usersList, isDie: $isDie, letShowNewCardTable: $letShowNewCardTable, letShooting: $letShooting)
+                                        .frame(maxWidth: .infinity)
+                                }
                             }
                         }
                     }
+                    .scrollIndicators(.hidden)
                 }
-                .scrollIndicators(.hidden)
+                if !isEmpty && !isShowCrad {
+                    ZStack {
+                        TableCardButton(letShooting: $letShooting, letShowNewCardTable: $letShowNewCardTable, isShowCrad: $isShowCrad)
+                            .padding(.horizontal)
+                        
+                    }
+                }
             }
+            .frame(width: geometry.size.width)
         }
         .toolbar {
             if !isEmpty {
@@ -56,27 +76,10 @@ struct GameView: View {
                         .foregroundStyle(Color.white)
                         .font(.system(size: 20))
                         .onTapGesture {
+                            CardViewViewModel.shared.titleCradDisplay = ""
                             viewModel.newGame()
                             isEmpty = true
                             HapticManager.shared.vibrate(for: .error)
-                        }
-                }
-
-                ToolbarItem(placement: .topBarTrailing) {
-                    Image(systemName: "suit.spade")
-                        .foregroundStyle(Color.white)
-                        .font(.system(size: 20))
-                        .onTapGesture {
-                            isShowCrad = true
-                            HapticManager.shared.vibrate(for: .success)
-                            SoundManager.shared.soundOfCard()
-                            RandomPlayingCardManager.shared.randomCard()
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                                withAnimation {
-                                    SoundManager.shared.soundOfCard()
-                                    isShowCrad = false
-                                }
-                            }
                         }
                 }
                 
@@ -86,6 +89,8 @@ struct GameView: View {
                         .font(.system(size: 20))
                         .onTapGesture {
                             withAnimation {
+                                CardViewViewModel.shared.titleCradDisplay = ""
+                                letShowNewCardTable = true
                                 viewModel.resetGame()
                                 HapticManager.shared.vibrate(for: .success)
                             }
