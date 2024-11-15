@@ -15,6 +15,8 @@ struct UserCellView: View {
     @Binding var isDie: Bool
     @State var isShowLongPressAlert: Bool = false
     
+    @State private var isDragging: Bool = false
+    
     var body: some View {
         ZStack {
             if !isLive {
@@ -92,8 +94,16 @@ struct UserCellView: View {
             .frame(width: 250, height: 250)
             .background(Color.gray.opacity( isLive ? 0.5 : 0 ))
             .cornerRadius(10.0)
-            .onLongPressGesture {
+            .gesture(
+                DragGesture()
+                    .onEnded({ _ in
+                        isDragging = true
+                    })
+            )
+            .allowsHitTesting(!isDragging)
+            .onLongPressGesture(minimumDuration: 0.5) {
                 withAnimation {
+                    HapticManager.shared.vibrate(for: .warning)
                     isShowLongPressAlert = true
                 }
             }
@@ -102,6 +112,7 @@ struct UserCellView: View {
                 Button("Cancel", role: .cancel) {
                     withAnimation {
                         isShowLongPressAlert = false
+                        HapticManager.shared.vibrate(for: .success)
                     }
                 }
                 
@@ -109,8 +120,10 @@ struct UserCellView: View {
                     withAnimation {
                         viewModel.deleteUser(user: user)
                         isShowLongPressAlert = false
+                        HapticManager.shared.vibrate(for: .error)
                     }
                 }
+                
             } message: {
                 Text("Are you sure you want to delete the gamer \(user.name)?")
             }

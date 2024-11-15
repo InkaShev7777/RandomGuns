@@ -68,6 +68,7 @@ struct GameView: View {
                         .font(.system(size: 20))
                         .onTapGesture {
                             isShowCrad = true
+                            HapticManager.shared.vibrate(for: .success)
                             SoundManager.shared.soundOfCard()
                             RandomPlayingCardManager.shared.randomCard()
                             DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
@@ -96,7 +97,10 @@ struct GameView: View {
                         .foregroundStyle(Color.white)
                         .font(.system(size: 20))
                         .onTapGesture {
-                            isShowSheet = true
+                            withAnimation {
+                                isShowSheet = true
+                                HapticManager.shared.vibrate(for: .success)
+                            }
                         }
                 }
             }
@@ -105,26 +109,24 @@ struct GameView: View {
         .alert("Add New User", isPresented: $isShowSheet) {
             TextField("Enter your name", text: $newUserName)
             
-            Button {
+            Button("Cancel", role: .cancel) {
                 withAnimation {
+                    HapticManager.shared.vibrate(for: .error)
                     isShowSheet = false
                     newUserName = ""
                 }
-            } label: {
-                Text("Cancel")
             }
             
-            Button{
+            Button("OK") {
                 viewModel.addNewGamer(name: newUserName)
                 if !viewModel.usersList.isEmpty {
                     SoundManager.shared.reelSpin()
                     withAnimation {
                         isEmpty = false
+                        HapticManager.shared.vibrate(for: .success)
                     }
                 }
                 newUserName = ""
-            } label: {
-                Text("OK")
             }
         } message: {
             Text("Username required to play.")
